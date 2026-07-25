@@ -84,8 +84,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Daily Rhythms — Habit Tracker" },
       { name: "twitter:description", content: "Suivez vos habitudes quotidiennes et construisez des séries qui durent." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2ad16312-28b9-42be-9616-3dc2f598d7f1/id-preview-3ab005e0--6683c729-46c0-4bc3-8dc9-efbb167278c1.lovable.app-1779706456664.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2ad16312-28b9-42be-9616-3dc2f598d7f1/id-preview-3ab005e0--6683c729-46c0-4bc3-8dc9-efbb167278c1.lovable.app-1779706456664.png" },
     ],
     links: [
       {
