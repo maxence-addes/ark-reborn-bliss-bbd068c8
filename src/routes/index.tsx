@@ -515,18 +515,6 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-brand-primary/10">
-      <RewardedAdModal
-        open={adModalOpen}
-        onClose={() => setAdModalOpen(false)}
-        onRewarded={() => {
-          rewardBypassRef.current = true;
-          void addHabit();
-        }}
-      />
-      <StudentPaywallModal
-        open={paywallOpen}
-        onClose={() => setPaywallOpen(false)}
-      />
       <header className="py-12 px-6">
         <div className="max-w-2xl mx-auto">
           <div className="flex justify-between items-end mb-8">
