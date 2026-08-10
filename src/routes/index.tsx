@@ -24,9 +24,6 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { RewardedAdModal } from "@/components/RewardedAdModal";
-import { StudentPaywallModal } from "@/components/StudentPaywallModal";
-import { FREE_HABIT_LIMIT, loadAd } from "@/lib/admob";
 
 const INSPIRATIONS: { image: string; quote: string }[] = [
   {
