@@ -542,16 +542,7 @@ function Index() {
               <button
                 onClick={() => {
                   const next = !studentMode;
-                  // Gate access to the student space behind a paid plan.
-                  // Users without an active subscription see the paywall.
-                  if (next && user) {
-                    const unlocked =
-                      localStorage.getItem(`student-access-unlocked:${user.id}`) === "1";
-                    if (!unlocked) {
-                      setPaywallOpen(true);
-                      return;
-                    }
-                  }
+
                   setStudentMode(next);
                   if (user) {
                     try {
