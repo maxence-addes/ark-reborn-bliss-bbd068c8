@@ -24,9 +24,6 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { RewardedAdModal } from "@/components/RewardedAdModal";
-import { StudentPaywallModal } from "@/components/StudentPaywallModal";
-import { FREE_HABIT_LIMIT, loadAd } from "@/lib/admob";
 
 const INSPIRATIONS: { image: string; quote: string }[] = [
   {
@@ -387,26 +384,9 @@ function Index() {
     }
   };
 
-  const [adModalOpen, setAdModalOpen] = useState(false);
-  const [paywallOpen, setPaywallOpen] = useState(false);
-  const rewardBypassRef = useRef(false);
-
-  useEffect(() => {
-    // Preload the rewarded ad when the user approaches the free limit.
-    if (habits.length >= FREE_HABIT_LIMIT) {
-      loadAd().catch(() => {});
-    }
-  }, [habits.length]);
-
   const addHabit = async () => {
     if (!newName.trim() || !user) return;
-    // Gate: free users limited to FREE_HABIT_LIMIT habits unless they
-    // just watched a rewarded ad (one-shot bypass).
-    if (habits.length >= FREE_HABIT_LIMIT && !rewardBypassRef.current) {
-      setAdModalOpen(true);
-      return;
-    }
-    rewardBypassRef.current = false;
+
     let schedule: Schedule = { type: "daily" };
     if (newScheduleType === "weekly") {
       schedule = { type: "weekly", weekdays: newWeekdays };
@@ -532,18 +512,6 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-brand-primary/10">
-      <RewardedAdModal
-        open={adModalOpen}
-        onClose={() => setAdModalOpen(false)}
-        onRewarded={() => {
-          rewardBypassRef.current = true;
-          void addHabit();
-        }}
-      />
-      <StudentPaywallModal
-        open={paywallOpen}
-        onClose={() => setPaywallOpen(false)}
-      />
       <header className="py-12 px-6">
         <div className="max-w-2xl mx-auto">
           <div className="flex justify-between items-end mb-8">
@@ -571,16 +539,7 @@ function Index() {
               <button
                 onClick={() => {
                   const next = !studentMode;
-                  // Gate access to the student space behind a paid plan.
-                  // Users without an active subscription see the paywall.
-                  if (next && user) {
-                    const unlocked =
-                      localStorage.getItem(`student-access-unlocked:${user.id}`) === "1";
-                    if (!unlocked) {
-                      setPaywallOpen(true);
-                      return;
-                    }
-                  }
+
                   setStudentMode(next);
                   if (user) {
                     try {
