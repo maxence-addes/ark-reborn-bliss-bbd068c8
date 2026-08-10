@@ -387,26 +387,9 @@ function Index() {
     }
   };
 
-  const [adModalOpen, setAdModalOpen] = useState(false);
-  const [paywallOpen, setPaywallOpen] = useState(false);
-  const rewardBypassRef = useRef(false);
-
-  useEffect(() => {
-    // Preload the rewarded ad when the user approaches the free limit.
-    if (habits.length >= FREE_HABIT_LIMIT) {
-      loadAd().catch(() => {});
-    }
-  }, [habits.length]);
-
   const addHabit = async () => {
     if (!newName.trim() || !user) return;
-    // Gate: free users limited to FREE_HABIT_LIMIT habits unless they
-    // just watched a rewarded ad (one-shot bypass).
-    if (habits.length >= FREE_HABIT_LIMIT && !rewardBypassRef.current) {
-      setAdModalOpen(true);
-      return;
-    }
-    rewardBypassRef.current = false;
+
     let schedule: Schedule = { type: "daily" };
     if (newScheduleType === "weekly") {
       schedule = { type: "weekly", weekdays: newWeekdays };
