@@ -220,6 +220,14 @@ function ProfilePage() {
   const isStudent = profile?.profession === "student";
   const isParent = profile?.profession === "parent";
   const meta = profile?.metadata ?? {};
+  const usedCodes = new Set(profile?.used_invite_codes ?? []);
+  const allCodes =
+    profile?.invite_codes && profile.invite_codes.length > 0
+      ? profile.invite_codes
+      : profile?.invite_code
+        ? [profile.invite_code]
+        : [];
+  const availableCodes = allCodes.filter((c) => !usedCodes.has(c));
 
   return (
     <div className="min-h-screen bg-background">
