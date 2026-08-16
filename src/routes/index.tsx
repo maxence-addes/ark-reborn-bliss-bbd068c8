@@ -1236,9 +1236,12 @@ function Index() {
           <div className="max-w-2xl mx-auto">
             <div className="grid grid-cols-2 gap-4">
               <div className="p-6 bg-muted/40 ring-1 ring-border rounded-2xl">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
-                  Meilleure série
-                </p>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    Meilleure série
+                  </p>
+                  <StreakFlame streak={bestStreak} size={22} />
+                </div>
                 <p className="text-2xl font-medium">
                   {bestStreak} <span className="text-sm font-normal text-muted-foreground">jours</span>
                 </p>
