@@ -4,6 +4,7 @@ import { Loader2, Check, Copy, GraduationCap, Users, ArrowLeft } from "lucide-re
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import { SCHOOL_LADDER, currentSchoolYear, schoolYearLabel } from "@/lib/school-levels";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -192,8 +193,8 @@ function OnboardingPage() {
     const profession = role === "student" ? "eleve" : "parent";
     const metadata =
       role === "student"
-        ? { grade, goal: studentGoal, subjects }
-        : { childCount, childLevels, expectations };
+        ? { grade, gradeYear: currentSchoolYear(), goal: studentGoal, subjects }
+        : { childCount, childLevels, childLevelsYear: currentSchoolYear(), expectations };
 
     const { error } = await supabase
       .from("profiles")
@@ -493,10 +494,10 @@ function OnboardingPage() {
 
           {role === "parent" && step === 3 && (
             <StepWrapper
-              title="Quel(s) niveau(x) scolaire(s) ?"
-              subtitle="Sélectionnez tous les niveaux concernés."
+              title="En quelle classe sont vos enfants ?"
+              subtitle={`Sélectionnez la classe précise pour l'année ${schoolYearLabel()}. Elle avancera automatiquement à chaque rentrée.`}
             >
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-[45vh] overflow-y-auto pr-1">
                 {CHILD_LEVELS.map((lvl) => (
                   <CheckBoxRow
                     key={lvl}
