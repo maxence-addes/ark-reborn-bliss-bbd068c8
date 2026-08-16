@@ -1,11 +1,88 @@
+import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, BookOpen, MessageCircle, Mail, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  MessageCircle,
+  Mail,
+  Sparkles,
+  X,
+  ListChecks,
+  Users,
+  Bell,
+  Camera,
+  Trophy,
+  Clock,
+  Target,
+} from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+const STARTER_STEPS = [
+  {
+    icon: ListChecks,
+    title: "Créez votre première habitude",
+    body: "Appuyez sur le bouton « + » sur l'accueil. Donnez un nom, choisissez une fréquence (quotidienne, hebdomadaire, à une date précise ou une échéance) puis validez.",
+  },
+  {
+    icon: Bell,
+    title: "Activez les rappels",
+    body: "Les habitudes planifiées apparaissent chaque jour sur l'accueil. Cochez-les au fur et à mesure pour garder votre série active.",
+  },
+  {
+    icon: Users,
+    title: "Liez un compte parent / enfant",
+    body: "Ouvrez « Informations personnelles », copiez votre code d'invitation et partagez-le. L'autre compte le saisit dans la même section pour se lier.",
+  },
+  {
+    icon: Camera,
+    title: "Validez les preuves (parent)",
+    body: "En mode parent, les preuves photo envoyées par l'enfant s'affichent dans « À valider ». Approuvez ou refusez chaque preuve d'un clic.",
+  },
+  {
+    icon: Trophy,
+    title: "Suivez les progrès",
+    body: "Ouvrez la carte de statistiques de l'enfant pour voir l'anneau de progression, le graphique sur 7 jours et les indicateurs détaillés.",
+  },
+];
+
+const CONSTANCY_TIPS = [
+  {
+    icon: Clock,
+    title: "Commencez petit",
+    body: "Visez 2 minutes par habitude au début. La régularité compte plus que la durée : mieux vaut 5 minutes chaque jour qu'une heure une fois par semaine.",
+  },
+  {
+    icon: Target,
+    title: "Une habitude à la fois",
+    body: "Ne lancez pas trois nouvelles habitudes d'un coup. Maîtrisez-en une pendant deux semaines avant d'en ajouter une seconde.",
+  },
+  {
+    icon: Bell,
+    title: "Déclencheurs visuels",
+    body: "Associez chaque habitude à un moment de la journée (après le petit-déjeuner, avant le coucher). L'application vous rappelle les tâches du jour.",
+  },
+  {
+    icon: Trophy,
+    title: "Célébrez les séries",
+    body: "Chaque jour validé alimente votre série. Cassez la chaîne est normal ; l'objectif est de la reconstruire le plus vite possible.",
+  },
+  {
+    icon: Camera,
+    title: "Soyez indulgent",
+    body: "Un jour manqué n'efface pas les progrès. Revenez le lendemain sans culpabilité : la constance se mesure sur des semaines, pas sur un jour.",
+  },
+];
 
 export const Route = createFileRoute("/help")({
   head: () => ({
