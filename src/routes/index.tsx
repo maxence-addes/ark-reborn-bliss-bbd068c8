@@ -85,6 +85,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/hooks/use-theme";
 import { ChildStats } from "@/components/child-stats";
+import { StreakFlame } from "@/components/streak-flame";
 
 export const Route = createFileRoute("/")({
   component: Index,
