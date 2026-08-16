@@ -6,7 +6,7 @@ import {
   MessageCircle,
   Mail,
   Sparkles,
-  X,
+  
   ListChecks,
   Users,
   Bell,
