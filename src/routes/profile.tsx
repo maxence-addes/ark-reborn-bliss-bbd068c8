@@ -145,7 +145,7 @@ function ProfilePage() {
         supabase
           .from("profiles")
           .select(
-            "display_name, profession, onboarded_at, created_at, invite_code, invite_codes, metadata",
+            "display_name, profession, onboarded_at, created_at, invite_code, invite_codes, used_invite_codes, metadata",
           )
           .eq("id", user.id)
           .maybeSingle(),
