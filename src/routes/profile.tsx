@@ -70,6 +70,7 @@ type ProfileInfo = {
   created_at: string | null;
   invite_code: string | null;
   invite_codes: string[] | null;
+  used_invite_codes: string[] | null;
   metadata: ProfileMetadata | null;
 };
 
