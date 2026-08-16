@@ -87,9 +87,17 @@ export const listPendingApprovalsForParent = createServerFn({ method: "POST" })
 
     const results = await Promise.all(
       approvals.map(async (a) => {
-        const { data: signed } = await supabaseAdmin.storage
-          .from("habit-proofs")
-          .createSignedUrl(a.image_path, 3600);
+        const paths =
+          a.image_paths && a.image_paths.length > 0 ? a.image_paths : [a.image_path];
+        const signedList = await Promise.all(
+          paths.map(async (p) => {
+            const { data: signed } = await supabaseAdmin.storage
+              .from("habit-proofs")
+              .createSignedUrl(p, 3600);
+            return signed?.signedUrl ?? null;
+          }),
+        );
+        const imageUrls = signedList.filter((u): u is string => !!u);
         return {
           id: a.id,
           habitId: a.habit_id,
@@ -97,7 +105,8 @@ export const listPendingApprovalsForParent = createServerFn({ method: "POST" })
           childId: a.child_user_id,
           childName: profMap.get(a.child_user_id) ?? "Enfant",
           date: a.date,
-          imageUrl: signed?.signedUrl ?? null,
+          imageUrl: imageUrls[0] ?? null,
+          imageUrls,
           createdAt: a.created_at,
         };
       }),
