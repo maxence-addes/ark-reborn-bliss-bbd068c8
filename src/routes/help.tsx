@@ -119,6 +119,8 @@ const FAQ = [
 
 function HelpPage() {
   const navigate = useNavigate();
+  const [openGuide, setOpenGuide] = useState(false);
+  const [openTips, setOpenTips] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -136,21 +138,80 @@ function HelpPage() {
         </p>
 
         <section className="grid sm:grid-cols-2 gap-3 mb-8">
-          <div className="rounded-2xl border border-border bg-card p-5">
+          <button
+            onClick={() => setOpenGuide(true)}
+            className="text-left rounded-2xl border border-border bg-card p-5 hover:border-primary/60 hover:bg-accent/40 transition-colors"
+          >
             <BookOpen className="w-5 h-5 mb-3 text-primary" />
             <p className="font-medium">Guide de démarrage</p>
             <p className="text-xs text-muted-foreground mt-1">
               Apprenez à créer vos premières habitudes en quelques minutes.
             </p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card p-5">
+          </button>
+          <button
+            onClick={() => setOpenTips(true)}
+            className="text-left rounded-2xl border border-border bg-card p-5 hover:border-primary/60 hover:bg-accent/40 transition-colors"
+          >
             <Sparkles className="w-5 h-5 mb-3 text-primary" />
             <p className="font-medium">Astuces de constance</p>
             <p className="text-xs text-muted-foreground mt-1">
               Concentrez-vous sur la fréquence avant l'intensité.
             </p>
-          </div>
+          </button>
         </section>
+
+        <Dialog open={openGuide} onOpenChange={setOpenGuide}>
+          <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-primary" /> Guide de démarrage
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-2">
+              {STARTER_STEPS.map((step, i) => (
+                <div key={i} className="flex gap-3">
+                  <div className="shrink-0 w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                    <step.icon className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">
+                      {i + 1}. {step.title}
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {step.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={openTips} onOpenChange={setOpenTips}>
+          <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" /> Astuces de constance
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-2">
+              {CONSTANCY_TIPS.map((tip, i) => (
+                <div key={i} className="flex gap-3">
+                  <div className="shrink-0 w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                    <tip.icon className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">{tip.title}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {tip.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
+
 
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">
           Questions fréquentes
