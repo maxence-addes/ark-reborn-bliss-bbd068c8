@@ -113,9 +113,9 @@ export function ChildStats(props: ChildStatsData) {
           <p className="text-xs text-muted-foreground mt-0.5">
             {weekDone}/{weekTotal} tâches cette semaine · {doneToday}/{scheduledToday} aujourd'hui
           </p>
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-              Série {bestStreak} j
+          <div className="flex flex-wrap gap-1.5 mt-2 items-center">
+            <span className="flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+              <StreakFlame streak={bestStreak} size={12} /> Série {bestStreak} j
             </span>
             {overdue > 0 && (
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600">
