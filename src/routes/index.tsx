@@ -132,6 +132,7 @@ function Index() {
     childName: string | null;
     date: string;
     imageUrl: string | null;
+    imageUrls?: string[];
     createdAt: string;
   };
   const [pendingApprovals, setPendingApprovals] = useState<PendingApproval[]>([]);
