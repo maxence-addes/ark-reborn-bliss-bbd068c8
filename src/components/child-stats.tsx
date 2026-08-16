@@ -201,12 +201,16 @@ export function ChildStats(props: ChildStatsData) {
                   hint="tâches réalisées"
                   value={`${doneToday}/${scheduledToday}`}
                 />
-                <StatRow
-                  icon={Flame}
-                  label="Meilleure série"
-                  hint="jours consécutifs"
-                  value={`${bestStreak} j`}
-                />
+                <div className="flex items-center gap-3 py-2.5">
+                  <div className="size-8 rounded-lg flex items-center justify-center shrink-0 bg-brand-primary/10">
+                    <StreakFlame streak={bestStreak} size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate">Meilleure série</p>
+                    <p className="text-[11px] text-muted-foreground">jours consécutifs</p>
+                  </div>
+                  <p className="text-sm font-semibold tabular-nums">{bestStreak} j</p>
+                </div>
               </div>
             </div>
 
