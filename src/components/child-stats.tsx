@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChevronDown, TrendingUp, CalendarCheck, Flame, ClipboardList, AlertTriangle, ShieldCheck } from "lucide-react";
+import { ChevronDown, TrendingUp, CalendarCheck, ClipboardList, AlertTriangle, ShieldCheck } from "lucide-react";
+import { StreakFlame } from "@/components/streak-flame";
 import { cn } from "@/lib/utils";
 
 export type ChildStatsData = {
@@ -113,9 +114,9 @@ export function ChildStats(props: ChildStatsData) {
           <p className="text-xs text-muted-foreground mt-0.5">
             {weekDone}/{weekTotal} tâches cette semaine · {doneToday}/{scheduledToday} aujourd'hui
           </p>
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-              Série {bestStreak} j
+          <div className="flex flex-wrap gap-1.5 mt-2 items-center">
+            <span className="flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+              <StreakFlame streak={bestStreak} size={12} /> Série {bestStreak} j
             </span>
             {overdue > 0 && (
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600">
@@ -200,12 +201,16 @@ export function ChildStats(props: ChildStatsData) {
                   hint="tâches réalisées"
                   value={`${doneToday}/${scheduledToday}`}
                 />
-                <StatRow
-                  icon={Flame}
-                  label="Meilleure série"
-                  hint="jours consécutifs"
-                  value={`${bestStreak} j`}
-                />
+                <div className="flex items-center gap-3 py-2.5">
+                  <div className="size-8 rounded-lg flex items-center justify-center shrink-0 bg-brand-primary/10">
+                    <StreakFlame streak={bestStreak} size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate">Meilleure série</p>
+                    <p className="text-[11px] text-muted-foreground">jours consécutifs</p>
+                  </div>
+                  <p className="text-sm font-semibold tabular-nums">{bestStreak} j</p>
+                </div>
               </div>
             </div>
 

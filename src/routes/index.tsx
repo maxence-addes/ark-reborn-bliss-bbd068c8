@@ -85,6 +85,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/hooks/use-theme";
 import { ChildStats } from "@/components/child-stats";
+import { StreakFlame } from "@/components/streak-flame";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -531,7 +532,7 @@ function Index() {
             <div className="flex items-center gap-3">
               {!studentMode && (
                 <div className="flex items-center gap-2 bg-muted/80 ring-1 ring-border px-3 py-1.5 rounded-full">
-                  <div className="size-4 bg-brand-primary rounded-full ring-4 ring-brand-primary/10" />
+                  <StreakFlame streak={bestStreak} size={16} />
                   <span className="text-sm font-medium">
                     Série de {bestStreak} {bestStreak > 1 ? "jours" : "jour"}
                   </span>
@@ -1004,14 +1005,18 @@ function Index() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span
-                    className={cn(
-                      "text-xs font-medium transition-colors",
-                      done ? "text-brand-primary" : "text-muted-foreground group-hover:text-brand-primary"
-                    )}
-                  >
-                    {done ? "Fait" : `Série de ${streak} j`}
-                  </span>
+                  {done ? (
+                    <span
+                      className="text-xs font-medium text-brand-primary"
+                    >
+                      Fait
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground group-hover:text-brand-primary transition-colors">
+                      <StreakFlame streak={streak} size={14} />
+                      Série de {streak} j
+                    </span>
+                  )}
                   <button
                     onClick={() => removeHabit(h.id)}
                     aria-label="Supprimer l'habitude"
@@ -1231,9 +1236,12 @@ function Index() {
           <div className="max-w-2xl mx-auto">
             <div className="grid grid-cols-2 gap-4">
               <div className="p-6 bg-muted/40 ring-1 ring-border rounded-2xl">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
-                  Meilleure série
-                </p>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    Meilleure série
+                  </p>
+                  <StreakFlame streak={bestStreak} size={22} />
+                </div>
                 <p className="text-2xl font-medium">
                   {bestStreak} <span className="text-sm font-normal text-muted-foreground">jours</span>
                 </p>
