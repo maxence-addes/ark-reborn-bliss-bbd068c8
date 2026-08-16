@@ -96,13 +96,13 @@ function HelpPage() {
         </h2>
         <div className="rounded-2xl border border-border bg-card p-5 space-y-3">
           <a
-            href="mailto:support@dailyrhythms.app"
-            className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+            href="mailto:maxence.addes@laposte.net"
+            className="flex items-center gap-3 text-sm hover:text-primary transition-colors break-all"
           >
-            <Mail className="w-4 h-4" /> support@dailyrhythms.app
+            <Mail className="w-4 h-4 shrink-0" /> maxence.addes@laposte.net
           </a>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <MessageCircle className="w-4 h-4" /> Réponse sous 48h ouvrées
+            <MessageCircle className="w-4 h-4 shrink-0" /> Réponse sous 1 semaine
           </div>
         </div>
       </div>
