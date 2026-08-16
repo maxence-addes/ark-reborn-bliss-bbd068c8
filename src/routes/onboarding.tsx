@@ -49,7 +49,7 @@ const SUBJECTS = [
 ];
 
 const CHILD_COUNT = ["1", "2", "3", "4+"];
-const CHILD_LEVELS = ["Primaire", "Collège", "Lycée"];
+const CHILD_LEVELS = SCHOOL_LADDER as readonly string[];
 const PARENT_EXPECTATIONS = [
   { value: "notify", label: "🔔 Recevoir une notification quand un devoir est terminé" },
   { value: "planning", label: "📅 Avoir une vue d'ensemble sur son planning" },
