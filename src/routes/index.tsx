@@ -1005,14 +1005,18 @@ function Index() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span
-                    className={cn(
-                      "text-xs font-medium transition-colors",
-                      done ? "text-brand-primary" : "text-muted-foreground group-hover:text-brand-primary"
-                    )}
-                  >
-                    {done ? "Fait" : `Série de ${streak} j`}
-                  </span>
+                  {done ? (
+                    <span
+                      className="text-xs font-medium text-brand-primary"
+                    >
+                      Fait
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground group-hover:text-brand-primary transition-colors">
+                      <StreakFlame streak={streak} size={14} />
+                      Série de {streak} j
+                    </span>
+                  )}
                   <button
                     onClick={() => removeHabit(h.id)}
                     aria-label="Supprimer l'habitude"
