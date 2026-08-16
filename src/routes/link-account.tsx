@@ -120,6 +120,7 @@ function LinkAccountPage() {
     if (insertErr) {
       // Unique violation = already linked
       if (insertErr.code === "23505") {
+        await supabase.rpc("consume_invite_code", { _code: code });
         setSuccess(true);
         setBusy(false);
         setTimeout(() => navigate({ to: "/" }), 1500);
@@ -129,6 +130,9 @@ function LinkAccountPage() {
       setBusy(false);
       return;
     }
+
+    // Marque le code comme utilisé pour qu'il n'apparaisse plus dans la liste.
+    await supabase.rpc("consume_invite_code", { _code: code });
 
     setSuccess(true);
     setBusy(false);
