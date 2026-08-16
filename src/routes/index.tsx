@@ -624,7 +624,7 @@ function Index() {
                   <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground font-medium px-3 pt-2 pb-1">
                     Compte
                   </DropdownMenuLabel>
-                  <DropdownMenuItem className="gap-2 cursor-pointer" onClick={() => navigate({ to: "/settings" })}>
+                  <DropdownMenuItem className="gap-2 cursor-pointer" onClick={() => navigate({ to: "/profile" })}>
                     <UserIcon className="w-4 h-4" /> Informations personnelles
                   </DropdownMenuItem>
                   <DropdownMenuItem className="gap-2 cursor-pointer" onClick={() => navigate({ to: "/link-account" })}>
