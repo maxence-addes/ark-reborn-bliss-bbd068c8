@@ -70,6 +70,7 @@ type ProfileInfo = {
   created_at: string | null;
   invite_code: string | null;
   invite_codes: string[] | null;
+  used_invite_codes: string[] | null;
   metadata: ProfileMetadata | null;
 };
 
@@ -144,7 +145,7 @@ function ProfilePage() {
         supabase
           .from("profiles")
           .select(
-            "display_name, profession, onboarded_at, created_at, invite_code, invite_codes, metadata",
+            "display_name, profession, onboarded_at, created_at, invite_code, invite_codes, used_invite_codes, metadata",
           )
           .eq("id", user.id)
           .maybeSingle(),
@@ -219,6 +220,14 @@ function ProfilePage() {
   const isStudent = profile?.profession === "student";
   const isParent = profile?.profession === "parent";
   const meta = profile?.metadata ?? {};
+  const usedCodes = new Set(profile?.used_invite_codes ?? []);
+  const allCodes =
+    profile?.invite_codes && profile.invite_codes.length > 0
+      ? profile.invite_codes
+      : profile?.invite_code
+        ? [profile.invite_code]
+        : [];
+  const availableCodes = allCodes.filter((c) => !usedCodes.has(c));
 
   return (
     <div className="min-h-screen bg-background">
@@ -336,15 +345,10 @@ function ProfilePage() {
             />
           )}
           <p className="text-[11px] uppercase tracking-wide text-muted-foreground mt-4 mb-2">
-            Code d'invitation principal
+            Codes d'invitation disponibles
           </p>
           <div className="flex flex-wrap gap-2">
-            {(profile?.invite_codes && profile.invite_codes.length > 0
-              ? profile.invite_codes
-              : profile?.invite_code
-                ? [profile.invite_code]
-                : []
-            ).map((code, i) => (
+            {availableCodes.map((code, i) => (
               <button
                 key={i}
                 onClick={() => copy(code)}
@@ -359,10 +363,11 @@ function ProfilePage() {
                 )}
               </button>
             ))}
-            {!profile?.invite_code &&
-              (!profile?.invite_codes || profile.invite_codes.length === 0) && (
-                <p className="text-sm text-muted-foreground">Aucun code disponible.</p>
-              )}
+            {availableCodes.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Aucun code disponible : tous vos codes ont déjà été utilisés.
+              </p>
+            )}
           </div>
         </Block>
 
