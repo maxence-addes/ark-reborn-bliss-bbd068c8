@@ -10,7 +10,7 @@ export const requestHabitApproval = createServerFn({ method: "POST" })
       .object({
         habitId: z.string().uuid(),
         date: z.string().min(1).max(10),
-        imagePath: z.string().min(1).max(500),
+        imagePaths: z.array(z.string().min(1).max(500)).min(1).max(10),
       })
       .parse(input),
   )
