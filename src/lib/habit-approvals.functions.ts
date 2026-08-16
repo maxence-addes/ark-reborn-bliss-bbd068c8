@@ -10,7 +10,7 @@ export const requestHabitApproval = createServerFn({ method: "POST" })
       .object({
         habitId: z.string().uuid(),
         date: z.string().min(1).max(10),
-        imagePath: z.string().min(1).max(500),
+        imagePaths: z.array(z.string().min(1).max(500)).min(1).max(10),
       })
       .parse(input),
   )
@@ -42,7 +42,8 @@ export const requestHabitApproval = createServerFn({ method: "POST" })
       child_user_id: context.userId,
       parent_user_id: habit.created_by,
       date: data.date,
-      image_path: data.imagePath,
+      image_path: data.imagePaths[0]!,
+      image_paths: data.imagePaths,
       status: "pending",
     });
     if (error) throw new Error(error.message);
@@ -67,7 +68,7 @@ export const listPendingApprovalsForParent = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { data: approvals, error } = await supabaseAdmin
       .from("habit_approvals")
-      .select("id, habit_id, child_user_id, date, image_path, status, created_at")
+      .select("id, habit_id, child_user_id, date, image_path, image_paths, status, created_at")
       .eq("parent_user_id", context.userId)
       .eq("status", "pending")
       .order("created_at", { ascending: false })
@@ -86,9 +87,17 @@ export const listPendingApprovalsForParent = createServerFn({ method: "POST" })
 
     const results = await Promise.all(
       approvals.map(async (a) => {
-        const { data: signed } = await supabaseAdmin.storage
-          .from("habit-proofs")
-          .createSignedUrl(a.image_path, 3600);
+        const paths =
+          a.image_paths && a.image_paths.length > 0 ? a.image_paths : [a.image_path];
+        const signedList = await Promise.all(
+          paths.map(async (p) => {
+            const { data: signed } = await supabaseAdmin.storage
+              .from("habit-proofs")
+              .createSignedUrl(p, 3600);
+            return signed?.signedUrl ?? null;
+          }),
+        );
+        const imageUrls = signedList.filter((u): u is string => !!u);
         return {
           id: a.id,
           habitId: a.habit_id,
@@ -96,7 +105,8 @@ export const listPendingApprovalsForParent = createServerFn({ method: "POST" })
           childId: a.child_user_id,
           childName: profMap.get(a.child_user_id) ?? "Enfant",
           date: a.date,
-          imageUrl: signed?.signedUrl ?? null,
+          imageUrl: imageUrls[0] ?? null,
+          imageUrls,
           createdAt: a.created_at,
         };
       }),

@@ -132,6 +132,7 @@ function Index() {
     childName: string | null;
     date: string;
     imageUrl: string | null;
+    imageUrls?: string[];
     createdAt: string;
   };
   const [pendingApprovals, setPendingApprovals] = useState<PendingApproval[]>([]);
@@ -339,20 +340,24 @@ function Index() {
   };
 
   const handleProofFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const files = Array.from(e.target.files ?? []).slice(0, 10);
     const habitId = pendingHabitForUploadRef.current;
     e.target.value = "";
     pendingHabitForUploadRef.current = null;
-    if (!file || !habitId || !user) return;
+    if (files.length === 0 || !habitId || !user) return;
     setUploadingHabitId(habitId);
     try {
-      const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-      const path = `${user.id}/${habitId}/${today}-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage
-        .from("habit-proofs")
-        .upload(path, file, { upsert: false, contentType: file.type || "image/jpeg" });
-      if (upErr) throw upErr;
-      await requestApprovalFn({ data: { habitId, date: today, imagePath: path } });
+      const imagePaths: string[] = [];
+      for (const [i, file] of files.entries()) {
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const path = `${user.id}/${habitId}/${today}-${Date.now()}-${i}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("habit-proofs")
+          .upload(path, file, { upsert: false, contentType: file.type || "image/jpeg" });
+        if (upErr) throw upErr;
+        imagePaths.push(path);
+      }
+      await requestApprovalFn({ data: { habitId, date: today, imagePaths } });
       setMyPendingHabitIds((prev) => new Set(prev).add(habitId));
     } catch (err) {
       console.error(err);
@@ -704,7 +709,7 @@ function Index() {
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        capture="environment"
+        multiple
         className="hidden"
         onChange={handleProofFileSelected}
       />
