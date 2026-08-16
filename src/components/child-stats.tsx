@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, TrendingUp, CalendarCheck, Flame, ClipboardList, AlertTriangle, ShieldCheck } from "lucide-react";
+import { ChevronDown, TrendingUp, CalendarCheck, ClipboardList, AlertTriangle, ShieldCheck } from "lucide-react";
 import { StreakFlame } from "@/components/streak-flame";
 import { cn } from "@/lib/utils";
 
