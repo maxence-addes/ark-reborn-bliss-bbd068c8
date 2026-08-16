@@ -68,7 +68,7 @@ export const listPendingApprovalsForParent = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { data: approvals, error } = await supabaseAdmin
       .from("habit_approvals")
-      .select("id, habit_id, child_user_id, date, image_path, status, created_at")
+      .select("id, habit_id, child_user_id, date, image_path, image_paths, status, created_at")
       .eq("parent_user_id", context.userId)
       .eq("status", "pending")
       .order("created_at", { ascending: false })
