@@ -42,7 +42,8 @@ export const requestHabitApproval = createServerFn({ method: "POST" })
       child_user_id: context.userId,
       parent_user_id: habit.created_by,
       date: data.date,
-      image_path: data.imagePath,
+      image_path: data.imagePaths[0]!,
+      image_paths: data.imagePaths,
       status: "pending",
     });
     if (error) throw new Error(error.message);
