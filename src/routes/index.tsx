@@ -532,7 +532,7 @@ function Index() {
             <div className="flex items-center gap-3">
               {!studentMode && (
                 <div className="flex items-center gap-2 bg-muted/80 ring-1 ring-border px-3 py-1.5 rounded-full">
-                  <div className="size-4 bg-brand-primary rounded-full ring-4 ring-brand-primary/10" />
+                  <StreakFlame streak={bestStreak} size={16} />
                   <span className="text-sm font-medium">
                     Série de {bestStreak} {bestStreak > 1 ? "jours" : "jour"}
                   </span>
