@@ -84,6 +84,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/hooks/use-theme";
+import { ChildStats } from "@/components/child-stats";
 
 export const Route = createFileRoute("/")({
   component: Index,
