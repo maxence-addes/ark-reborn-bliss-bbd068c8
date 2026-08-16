@@ -337,15 +337,10 @@ function ProfilePage() {
             />
           )}
           <p className="text-[11px] uppercase tracking-wide text-muted-foreground mt-4 mb-2">
-            Code d'invitation principal
+            Codes d'invitation disponibles
           </p>
           <div className="flex flex-wrap gap-2">
-            {(profile?.invite_codes && profile.invite_codes.length > 0
-              ? profile.invite_codes
-              : profile?.invite_code
-                ? [profile.invite_code]
-                : []
-            ).map((code, i) => (
+            {availableCodes.map((code, i) => (
               <button
                 key={i}
                 onClick={() => copy(code)}
@@ -360,10 +355,11 @@ function ProfilePage() {
                 )}
               </button>
             ))}
-            {!profile?.invite_code &&
-              (!profile?.invite_codes || profile.invite_codes.length === 0) && (
-                <p className="text-sm text-muted-foreground">Aucun code disponible.</p>
-              )}
+            {availableCodes.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Aucun code disponible : tous vos codes ont déjà été utilisés.
+              </p>
+            )}
           </div>
         </Block>
 
