@@ -24,6 +24,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import {
+  levelForNow,
+  levelsForNow,
+  currentSchoolYear,
+  schoolYearLabel,
+} from "@/lib/school-levels";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -52,6 +58,8 @@ type ProfileMetadata = {
   subjects?: string[];
   childCount?: string;
   childLevels?: string[];
+  childLevelsYear?: number;
+  gradeYear?: number;
   expectations?: string[];
 };
 
@@ -155,6 +163,20 @@ function ProfilePage() {
       setChildren((kids as ChildLink[] | null) ?? []);
       setHabitsCount(count ?? 0);
       setLoading(false);
+
+      // Fait avancer les classes d'une année à chaque rentrée scolaire.
+      const md = (prof?.metadata as ProfileMetadata | null) ?? null;
+      const year = currentSchoolYear();
+      if (md && md.childLevels?.length && md.childLevelsYear && md.childLevelsYear < year) {
+        const updated = levelsForNow(md.childLevels, md.childLevelsYear);
+        const nextMeta = { ...md, childLevels: updated, childLevelsYear: year };
+        setProfile((prev) => (prev ? { ...prev, metadata: nextMeta } : prev));
+        await supabase.from("profiles").update({ metadata: nextMeta }).eq("id", user.id);
+      } else if (md && md.grade && md.gradeYear && md.gradeYear < year) {
+        const nextMeta = { ...md, grade: levelForNow(md.grade, md.gradeYear), gradeYear: year };
+        setProfile((prev) => (prev ? { ...prev, metadata: nextMeta } : prev));
+        await supabase.from("profiles").update({ metadata: nextMeta }).eq("id", user.id);
+      }
     })();
     return () => {
       cancelled = true;
@@ -261,7 +283,11 @@ function ProfilePage() {
           <dl className="divide-y divide-border">
             <Row icon={Calendar} label="Quiz complété le" value={formatDate(profile?.onboarded_at ?? null)} />
             {isStudent && meta.grade && (
-              <Row icon={GraduationCap} label="Niveau" value={meta.grade} />
+              <Row
+                icon={GraduationCap}
+                label={`Classe (${schoolYearLabel()})`}
+                value={levelForNow(meta.grade, meta.gradeYear)}
+              />
             )}
             {isStudent && meta.studentGoal && (
               <Row
@@ -280,7 +306,16 @@ function ProfilePage() {
             <Chips icon={BookOpen} title="Matières prioritaires" items={meta.subjects} />
           )}
           {isParent && meta.childLevels && meta.childLevels.length > 0 && (
-            <Chips icon={Baby} title="Niveaux scolaires des enfants" items={meta.childLevels} />
+            <>
+              <Chips
+                icon={Baby}
+                title={`Classes des enfants — ${schoolYearLabel()}`}
+                items={levelsForNow(meta.childLevels, meta.childLevelsYear)}
+              />
+              <p className="text-xs text-muted-foreground mt-2">
+                Mise à jour automatique à chaque rentrée scolaire (août).
+              </p>
+            </>
           )}
           {isParent && meta.expectations && meta.expectations.length > 0 && (
             <Chips

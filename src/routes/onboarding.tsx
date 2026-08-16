@@ -4,6 +4,7 @@ import { Loader2, Check, Copy, GraduationCap, Users, ArrowLeft } from "lucide-re
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import { SCHOOL_LADDER, currentSchoolYear, schoolYearLabel } from "@/lib/school-levels";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -49,7 +50,7 @@ const SUBJECTS = [
 ];
 
 const CHILD_COUNT = ["1", "2", "3", "4+"];
-const CHILD_LEVELS = ["Primaire", "Collège", "Lycée"];
+const CHILD_LEVELS = SCHOOL_LADDER as readonly string[];
 const PARENT_EXPECTATIONS = [
   { value: "notify", label: "🔔 Recevoir une notification quand un devoir est terminé" },
   { value: "planning", label: "📅 Avoir une vue d'ensemble sur son planning" },
@@ -192,8 +193,8 @@ function OnboardingPage() {
     const profession = role === "student" ? "eleve" : "parent";
     const metadata =
       role === "student"
-        ? { grade, goal: studentGoal, subjects }
-        : { childCount, childLevels, expectations };
+        ? { grade, gradeYear: currentSchoolYear(), goal: studentGoal, subjects }
+        : { childCount, childLevels, childLevelsYear: currentSchoolYear(), expectations };
 
     const { error } = await supabase
       .from("profiles")
@@ -493,10 +494,10 @@ function OnboardingPage() {
 
           {role === "parent" && step === 3 && (
             <StepWrapper
-              title="Quel(s) niveau(x) scolaire(s) ?"
-              subtitle="Sélectionnez tous les niveaux concernés."
+              title="En quelle classe sont vos enfants ?"
+              subtitle={`Sélectionnez la classe précise pour l'année ${schoolYearLabel()}. Elle avancera automatiquement à chaque rentrée.`}
             >
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-[45vh] overflow-y-auto pr-1">
                 {CHILD_LEVELS.map((lvl) => (
                   <CheckBoxRow
                     key={lvl}
