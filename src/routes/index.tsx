@@ -871,40 +871,37 @@ function Index() {
           (h) => h.createdBy && h.createdBy !== viewingChild.id,
         ).length;
 
-        const stats: { label: string; value: string; hint?: string }[] = [
-          { label: "Progression cette semaine", value: `${weekPct}%`, hint: `${weekDone}/${weekTotal} tâches` },
-          { label: "Aujourd'hui", value: `${doneToday}/${scheduledToday}`, hint: "tâches faites" },
-          { label: "Meilleure série", value: `${bestChildStreak} j`, hint: "consécutifs" },
-          { label: "Total complété", value: String(totalCompletions), hint: "toutes périodes" },
-          { label: "Tâches actives", value: String(activeHabits), hint: `${parentGiven} données par vous` },
-          { label: "En retard", value: String(overdue), hint: "échéances passées" },
-          { label: "À valider", value: String(childApprovals.length), hint: "preuves en attente" },
-        ];
+        const dayLabels = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+        const week = weekDates.map((d, i) => {
+          const key = todayKey(d);
+          let total = 0;
+          let done = 0;
+          habits.forEach((h) => {
+            if (!isScheduledOn(h, d)) return;
+            total += 1;
+            if (h.completions.includes(key)) done += 1;
+          });
+          return { label: dayLabels[i], done, total, isToday: key === today };
+        });
 
         return (
           <section className="py-0 px-6 mt-6">
-            <div className="max-w-2xl mx-auto space-y-3">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-sm font-medium text-muted-foreground">
-                  Statistiques de {viewingChild.display_name ?? "votre enfant"}
-                </h2>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {stats.map((s) => (
-                  <div
-                    key={s.label}
-                    className="p-3 bg-card ring-1 ring-border rounded-xl"
-                  >
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                      {s.label}
-                    </p>
-                    <p className="text-xl font-semibold mt-1 text-foreground">{s.value}</p>
-                    {s.hint && (
-                      <p className="text-[11px] text-muted-foreground mt-0.5">{s.hint}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
+            <div className="max-w-2xl mx-auto">
+              <ChildStats
+                childName={viewingChild.display_name ?? "votre enfant"}
+                weekPct={weekPct}
+                weekDone={weekDone}
+                weekTotal={weekTotal}
+                doneToday={doneToday}
+                scheduledToday={scheduledToday}
+                bestStreak={bestChildStreak}
+                totalCompletions={totalCompletions}
+                activeHabits={activeHabits}
+                parentGiven={parentGiven}
+                overdue={overdue}
+                toApprove={childApprovals.length}
+                week={week}
+              />
             </div>
           </section>
         );
